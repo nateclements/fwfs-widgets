@@ -5,7 +5,7 @@
   body { margin: 0; background: transparent; }
   #hdr {
     font-family: Calibri, sans-serif;
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
     color: #ffffff;
     text-align: center;
@@ -18,9 +18,10 @@
   <div id="hdr"></div>
   <script>
     var d = new Date();
+    d.setDate(d.getDate() + 2);
     var label = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
-    document.getElementById('hdr').textContent =
-      "6 Hr to 24 Hr (Day 1 \u00B7 " + label + ") Threat Outlook Page";
+    document.getElementById('hdr').innerHTML =
+      "6 Hr to 24 Hour (Day 1 \u00B7 " + label + ")<br>Threat Outlook Page";
   </script>
 </body>
 </html>
