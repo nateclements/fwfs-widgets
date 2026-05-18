@@ -18,7 +18,7 @@
   <div id="hdr"></div>
   <script>
     var d = new Date();
-    d.setDate(d.getDate() + 2);
+    d.setDate(d.getDate());
     var label = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
     document.getElementById('hdr').innerHTML =
       "6 Hr to 24 Hour (Day 1 \u00B7 " + label + ")<br>Threat Outlook Page";
