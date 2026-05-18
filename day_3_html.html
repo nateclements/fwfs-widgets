@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 0; background: transparent; }
+  #hdr {
+    font-family: Calibri, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    padding: 8px 12px;
+    border: 2px solid #cc0000;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <div id="hdr"></div>
+  <script>
+    var d = new Date();
+    d.setDate(d.getDate() + 2);
+    var label = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+    document.getElementById('hdr').textContent =
+      "48 Hour (Day 3 \u00B7 " + label + ") Threat Outlook Page";
+  </script>
+</body>
+</html>
