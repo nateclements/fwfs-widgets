@@ -10,7 +10,6 @@
     color: #ffffff;
     text-align: center;
     padding: 8px 12px;
-    border: 0px solid #cc0000;
     border-radius: 4px;
   }
 </style>
@@ -21,8 +20,8 @@
     var d = new Date();
     d.setDate(d.getDate() + 2);
     var label = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
-    document.getElementById('hdr').textContent =
-      "48 Hour (Day 3 \u00B7 " + label + ") Threat Outlook Page";
+    document.getElementById('hdr').innerHTML =
+      "48 Hour (Day 3 \u00B7 " + label + ")<br>Threat Outlook Page";
   </script>
 </body>
 </html>
