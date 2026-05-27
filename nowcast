@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 0; background: transparent; }
+  #hdr {
+    font-family: Calibri, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <div id="hdr"></div>
+  <script>
+    var d = new Date();
+    d.setDate(d.getDate());
+    var label = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+    document.getElementById('hdr').innerHTML =
+      "Nowcast / Radar Feeds (Day 1 \u00B7 " + label + ")";
+  </script>
+</body>
+</html>
