@@ -2,26 +2,54 @@
 <html>
 <head>
 <style>
-  body { margin: 0; background: transparent; }
+  /* 1. Reset defaults and force the canvas to fill the iframe 100% */
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* 2. Flexbox container guarantees the header stays perfectly centered vertically and horizontally */
+  .banner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 4px 8px;
+  }
+
+  /* 3. Fluid font calculations set explicitly to 16px + 1vw */
   #hdr {
     font-family: Calibri, sans-serif;
-    font-size: 30px;
+    font-size: calc(16px + 1vw); 
     font-weight: bold;
     color: #ffffff;
-    text-align: center;
-    padding: 8px 12px;
-    border-radius: 4px;
+    line-height: 1.25;
+    white-space: nowrap; /* Forces the entire title string to stay cleanly on a single line */
   }
 </style>
 </head>
 <body>
-  <div id="hdr"></div>
+
+  <div class="banner-container">
+    <div id="hdr"></div>
+  </div>
+
   <script>
     var d = new Date();
-    d.setDate(d.getDate());
+    d.setDate(d.getDate()); // Day 1 current system time
     var label = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+    
+    // Injects the unified white text string natively
     document.getElementById('hdr').innerHTML =
-      "Nowcast / Radar Feeds (Day 1 \u00B7 " + label + ")";
+      "Nowcast / Radar Feeds (Day 1 &middot; " + label + ")";
   </script>
 </body>
 </html>
