@@ -30,21 +30,31 @@
 
   /* ---------- masthead ---------- */
   .masthead{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:16px; flex-wrap:wrap; margin-bottom:16px;
+    display:grid; grid-template-columns:1fr auto 1fr;
+    align-items:center; gap:16px; margin-bottom:16px;
   }
-  .brandline{ display:flex; align-items:center; gap:14px; }
-  .brandline img{ height:44px; width:auto; display:block; }
   .wordmark{
     font-family:'Barlow Semi Condensed', sans-serif; font-weight:700;
     font-size:22px; color:#fff; letter-spacing:.01em;
   }
   .wordmark span{ color:var(--sea-foam); font-weight:600; }
+  .masthead-logo{ justify-self:center; }
+  .masthead-logo img{
+    display:block; height:46px; width:auto; max-width:300px;
+    background:transparent;
+  }
   .adopted{
+    justify-self:end;
     font-family:'Barlow Semi Condensed', sans-serif; font-weight:600;
     font-size:12px; letter-spacing:.14em; text-transform:uppercase;
     color:var(--dark-blue); background:var(--sea-foam);
-    padding:6px 14px; border-radius:4px;
+    padding:6px 14px; border-radius:4px; white-space:nowrap;
+  }
+  @media (max-width:640px){
+    .masthead{ grid-template-columns:1fr; justify-items:center;
+      text-align:center; gap:10px; }
+    .masthead-logo, .adopted{ justify-self:center; }
+    .masthead-logo img{ height:38px; }
   }
 
   /* ---------- document card ---------- */
@@ -123,6 +133,7 @@
     .doc{ border:1px solid var(--line); }
     .wordmark{ color:var(--dark-blue); }
     .adopted{ border:1px solid var(--dark-blue); }
+    .masthead-logo{ display:none; }  /* white logo invisible on print white */
     footer.page{ display:none; }
   }
 </style>
@@ -131,12 +142,11 @@
 <div class="wrap">
 
   <div class="masthead">
-    <div class="brandline">
-      <!-- Place consor-logo.png in the same repo folder as this file.
-           If the image is missing the logo simply hides (onerror). -->
-      <img src="consor-logo.png" alt="Consor North America, Inc."
+    <div class="wordmark">FWFS <span>&middot; Project Nightlight</span></div>
+    <div class="masthead-logo">
+      <img src="https://nateclements.github.io/fwfs-widgets/CE_Logo_RGB_Horz-White-Color.png"
+           alt="Consor North America, Inc."
            onerror="this.style.display='none'">
-      <div class="wordmark">FWFS <span>&middot; Project Nightlight</span></div>
     </div>
     <div class="adopted">Adopted June 4, 2026</div>
   </div>
