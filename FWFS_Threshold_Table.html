@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FWFS Threat Scoring Thresholds — Grand County Flood Warning &amp; Forecast System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:        #0E3A5D;
+    --navy-deep:   #0A2C47;
+    --card:        #EDF3F8;
+    --line:        #C9D6E2;
+    --ink:         #2E4458;
+    --ink-soft:    #5A7186;
+    --t0:          #6B7C8E;   /* NO THREAT  */
+    --t1:          #3FB6D2;   /* MONITOR    */
+    --t2:          #E3B33C;   /* ELEVATED   */
+    --t3:          #E0843C;   /* HIGH       */
+    --t4:          #CE4B3E;   /* CRITICAL   */
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:'Source Sans 3', 'Segoe UI', sans-serif;
+    background:var(--navy);
+    color:var(--ink);
+    padding:28px 18px 36px;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; }
+
+  /* ---------- header ---------- */
+  header{ color:#fff; margin-bottom:18px; }
+  .eyebrow{
+    font-family:'Barlow Semi Condensed', sans-serif;
+    font-weight:600; font-size:12px; letter-spacing:.22em;
+    text-transform:uppercase; color:#9FC2DB; margin-bottom:6px;
+  }
+  h1{
+    font-family:'Barlow Semi Condensed', sans-serif;
+    font-weight:700; font-size:clamp(22px, 3.4vw, 32px);
+    line-height:1.15; letter-spacing:.01em;
+  }
+  .subtitle{ margin-top:6px; font-size:14px; color:#C7DAE8; max-width:62ch; }
+
+  /* ---------- tier legend strip (signature) ---------- */
+  .tiers{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:8px;
+    margin:20px 0 10px;
+  }
+  .tier{
+    border-radius:8px 8px 0 0; padding:10px 12px 9px; color:#fff;
+    font-family:'Barlow Semi Condensed', sans-serif;
+  }
+  .tier .num{ font-weight:700; font-size:22px; line-height:1; }
+  .tier .name{ font-weight:600; font-size:13px; letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
+  .tier .posture{ font-size:11.5px; font-family:'Source Sans 3',sans-serif; opacity:.92; margin-top:3px; }
+  .tier0{ background:var(--t0); } .tier1{ background:var(--t1); }
+  .tier2{ background:var(--t2); } .tier3{ background:var(--t3); }
+  .tier4{ background:var(--t4); }
+
+  /* ---------- table ---------- */
+  .scroll{ overflow-x:auto; border-radius:0 0 10px 10px; }
+  table{
+    width:100%; min-width:920px; border-collapse:separate; border-spacing:0;
+    background:var(--card); font-size:13.5px; line-height:1.42;
+  }
+  th, td{ padding:11px 12px; vertical-align:top; border-bottom:1px solid var(--line); }
+  thead th{
+    background:var(--navy-deep); color:#fff; text-align:left;
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:600;
+    font-size:12.5px; letter-spacing:.1em; text-transform:uppercase;
+    position:sticky; top:0;
+  }
+  thead th:first-child{ width:218px; }
+  td.product{
+    font-weight:600; color:var(--navy); background:#E2EBF3;
+    border-right:1px solid var(--line);
+  }
+  td.product .tag{
+    display:inline-block; margin-top:5px; padding:1px 7px; border-radius:10px;
+    background:var(--navy); color:#CFE2F0; font-size:10.5px; font-weight:600;
+    letter-spacing:.08em; text-transform:uppercase;
+    font-family:'Barlow Semi Condensed', sans-serif;
+  }
+  td.product .src{ display:block; margin-top:4px; font-weight:400; font-size:11.5px; color:var(--ink-soft); }
+  td{ border-right:1px solid var(--line); }
+  td:last-child{ border-right:none; }
+  tr:last-child td{ border-bottom:none; }
+
+  /* per-tier column accents: thin top keyline echoing the legend */
+  td.c0{ box-shadow:inset 0 3px 0 var(--t0); }
+  td.c1{ box-shadow:inset 0 3px 0 var(--t1); }
+  td.c2{ box-shadow:inset 0 3px 0 var(--t2); }
+  td.c3{ box-shadow:inset 0 3px 0 var(--t3); }
+  td.c4{ box-shadow:inset 0 3px 0 var(--t4); }
+  tr + tr td.c0, tr + tr td.c1, tr + tr td.c2,
+  tr + tr td.c3, tr + tr td.c4{ box-shadow:none; }
+
+  .floor{
+    display:inline-block; margin-top:5px; padding:1px 7px; border-radius:3px;
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:600;
+    font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;
+    background:var(--navy); color:#FFD9A8;
+  }
+  .new-row td.product{ background:#D8E7F2; }
+  .new-pill{
+    display:inline-block; margin-left:6px; padding:1px 6px; border-radius:3px;
+    background:var(--t1); color:#fff; font-size:10px; font-weight:700;
+    letter-spacing:.06em; font-family:'Barlow Semi Condensed', sans-serif;
+    vertical-align:2px;
+  }
+
+  /* ---------- notes ---------- */
+  .notes{
+    margin-top:16px; background:rgba(255,255,255,.07); border-radius:8px;
+    padding:14px 16px; color:#D5E4EF; font-size:12.5px; line-height:1.55;
+  }
+  .notes h2{
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:600;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:#9FC2DB; margin-bottom:8px;
+  }
+  .notes p{ margin-bottom:7px; }
+  .notes p:last-child{ margin-bottom:0; }
+  .notes b{ color:#fff; font-weight:600; }
+  footer{ margin-top:14px; font-size:11.5px; color:#7FA2BD; text-align:center; }
+
+  @media (max-width:680px){
+    .tiers{ grid-template-columns:repeat(5,minmax(110px,1fr)); overflow-x:auto; }
+    body{ padding:18px 10px 26px; }
+  }
+  @media print{
+    body{ background:#fff; }
+    header, .eyebrow{ color:var(--navy); }
+    .subtitle{ color:var(--ink-soft); }
+    .notes{ background:#EDF3F8; color:var(--ink); }
+    .notes h2{ color:var(--navy); }
+    .notes b{ color:var(--navy); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Grand County Flood Warning &amp; Forecast System</div>
+    <h1>How FWFS Scores Flood Threat</h1>
+    <p class="subtitle">Every data product below is scored 0&ndash;4 against the Mill Creek
+    basin on its own thresholds. The dashboard combines these scores into one
+    overall threat posture for each outlook window.</p>
+  </header>
+
+  <div class="tiers" aria-hidden="false">
+    <div class="tier tier0"><div class="num">0</div><div class="name">No Threat</div><div class="posture">Stand down</div></div>
+    <div class="tier tier1"><div class="num">1</div><div class="name">Monitor</div><div class="posture">Stay aware</div></div>
+    <div class="tier tier2"><div class="num">2</div><div class="name">Elevated</div><div class="posture">Lean forward</div></div>
+    <div class="tier tier3"><div class="num">3</div><div class="name">High</div><div class="posture">Prepare to act</div></div>
+    <div class="tier tier4"><div class="num">4</div><div class="name">Critical</div><div class="posture">Act now</div></div>
+  </div>
+
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Data Product</th>
+        <th scope="col">No Threat (0)</th>
+        <th scope="col">Monitor (1)</th>
+        <th scope="col">Elevated (2)</th>
+        <th scope="col">High (3)</th>
+        <th scope="col">Critical (4)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="product">Excessive Rainfall Outlook (ERO)
+          <span class="src">WPC &middot; all time scales</span>
+          <span class="tag">Outlook</span></td>
+        <td class="c0">&gt;75 miles outside of MRGL</td>
+        <td class="c1">25&ndash;75 miles outside of MRGL</td>
+        <td class="c2">Basin inside MRGL</td>
+        <td class="c3">Basin inside SLGT</td>
+        <td class="c4">Basin inside MDT or higher</td>
+      </tr>
+
+      <tr>
+        <td class="product">Convective Outlook
+          <span class="src">Storm Prediction Center &middot; all time scales</span>
+          <span class="tag">Outlook</span></td>
+        <td class="c0">Outside general thunderstorm area (&ge;100 miles)</td>
+        <td class="c1">In general thunderstorm area</td>
+        <td class="c2">In Slight Risk or near Slight (&le;50 miles)</td>
+        <td class="c3">Enhanced</td>
+        <td class="c4">Moderate and above</td>
+      </tr>
+
+      <tr>
+        <td class="product">WPC Quantitative Precipitation Forecast (QPF)
+          <span class="src">All time scales &middot; 24-hour amounts</span>
+          <span class="tag">Forecast</span></td>
+        <td class="c0">&lt;0.25&quot; basin average</td>
+        <td class="c1">0.25&ndash;0.50&quot; basin average</td>
+        <td class="c2">0.50&ndash;1.0&quot; with at least partial basin coverage</td>
+        <td class="c3">1.0&ndash;2.0&quot; maxima within basin</td>
+        <td class="c4">&gt;2.0&quot; maxima within basin</td>
+      </tr>
+
+      <tr>
+        <td class="product">NWS Watch/Warn + AFD
+          <span class="src">Grand Junction WFO products &middot; scores 1&ndash;2 from forecast
+          discussion language, 3&ndash;4 from active watch/warning products</span>
+          <span class="tag">Alert</span></td>
+        <td class="c0">No watches or relevant forecast discussion language</td>
+        <td class="c1">AFD mentions rain showers possible but heavy rain unlikely</td>
+        <td class="c2">AFD mentions &ldquo;heavy rain possible&rdquo; or &ldquo;flash flood potential&rdquo; without watches</td>
+        <td class="c3">Flash Flood Watch / Flood Watch issued for basin or county (or nearby)
+          <span class="floor">Sets overall floor</span></td>
+        <td class="c4">Active Flash Flood Warning or Flood Warning for basin (within 15-mile buffer)
+          <span class="floor">Sets overall floor</span></td>
+      </tr>
+
+      <tr>
+        <td class="product">NDFD QPF &mdash; Short Range
+          <span class="src">GJT forecaster grids &middot; next 6&ndash;12 hours &middot; mean of 3 basin points</span>
+          <span class="tag">Forecast</span></td>
+        <td class="c0">&lt;0.10&quot; within basin in the next 6&ndash;12 hours</td>
+        <td class="c1">0.10&ndash;0.25&quot; within basin in the next 6&ndash;12 hours</td>
+        <td class="c2">0.26&ndash;0.50&quot; within basin in the next 6&ndash;12 hours</td>
+        <td class="c3">0.51&ndash;0.75&quot; within basin in the next 6&ndash;12 hours</td>
+        <td class="c4">&ge;0.75&quot; within basin in the next 6+ hours</td>
+      </tr>
+
+      <tr class="new-row">
+        <td class="product">NDFD QPF &mdash; Day 2 / Day 3<span class="new-pill">New</span>
+          <span class="src">GJT forecaster grids &middot; local calendar-day totals &middot;
+          3 basin points (uses the WPC 24-hour bands)</span>
+          <span class="tag">Forecast</span></td>
+        <td class="c0">&lt;0.25&quot; basin mean for the day</td>
+        <td class="c1">0.25&ndash;0.50&quot; basin mean for the day</td>
+        <td class="c2">0.50&ndash;1.0&quot; basin mean for the day</td>
+        <td class="c3">1.0&ndash;2.0&quot; maxima at any basin point</td>
+        <td class="c4">&gt;2.0&quot; maxima at any basin point</td>
+      </tr>
+
+      <tr>
+        <td class="product">Precipitable Water (PWAT)
+          <span class="src">Sounding-based atmospheric moisture</span>
+          <span class="tag">Forecast</span></td>
+        <td class="c0">&lt;0.6&quot;</td>
+        <td class="c1">0.6&ndash;0.74&quot;</td>
+        <td class="c2">0.75&ndash;0.89&quot;</td>
+        <td class="c3">0.90&ndash;1.10&quot;</td>
+        <td class="c4">&gt;1.10&quot;</td>
+      </tr>
+
+      <tr>
+        <td class="product">MRMS Radar QPE
+          <span class="src">Radar-only 1-hour rainfall estimate over basin</span>
+          <span class="tag">Observation</span></td>
+        <td class="c0">&lt;0.10&quot; (1 hr) over basin</td>
+        <td class="c1">0.10&ndash;0.25&quot; (1 hr) over basin</td>
+        <td class="c2">0.26&ndash;0.50&quot; (1 hr) over basin</td>
+        <td class="c3">0.51&ndash;0.75&quot; (1 hr) over basin</td>
+        <td class="c4">&gt;0.75&quot; (1 hr) over basin</td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div class="notes">
+    <h2>How the scores combine</h2>
+    <p><b>Weighted blend.</b> Each outlook window (0&ndash;6 hr, 6&ndash;24 hr, Day 2, Day 3)
+    blends its relevant product scores using fixed weights, so no single soft signal
+    can flip a quiet day on its own. Short-range windows lean on radar, short-fuse QPF,
+    and atmospheric moisture; Day 2 and Day 3 lean on the ERO, SPC, and the WPC and
+    NDFD daily rainfall forecasts.</p>
+    <p><b>Watches and warnings set a floor.</b> An active Flood Watch forces the affected
+    window to at least HIGH, and an active Flood or Flash Flood Warning forces at least
+    CRITICAL, regardless of how quiet the other products are. Watches apply only to the
+    windows their valid times actually cover &mdash; a watch for today does not raise the
+    Day 2 or Day 3 outlook.</p>
+    <p><b>AFD language informs, but does not override.</b> Plain-language signals from the
+    Grand Junction forecast discussion (scores 1&ndash;2) feed the blend and the NWS
+    Watch/Warn + AFD indicator, but only actual watch and warning products can force
+    the overall level upward.</p>
+    <p><b>Day 3 note.</b> NDFD rainfall grids extend about 72 hours, so the Day 3 daily
+    total can exclude the final early-morning hours of that day. Coverage is tracked
+    and displayed with the data.</p>
+  </div>
+
+  <footer>Grand County OEM &middot; FWFS / Project Nightlight &middot; Thresholds current as of June 2026</footer>
+
+</div>
+</body>
+</html>
