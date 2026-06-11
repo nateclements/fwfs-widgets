@@ -111,6 +111,30 @@
     vertical-align:2px;
   }
 
+  /* ---------- per-window scoring cards ---------- */
+  .win-head{
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:600;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:#9FC2DB; margin:22px 0 10px;
+  }
+  .windows{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .win{ background:var(--card); border-radius:8px; padding:14px 16px 13px; }
+  .win h3{
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:700;
+    font-size:16px; color:var(--navy); letter-spacing:.01em;
+  }
+  .win .horizon{ font-size:11.5px; color:var(--ink-soft); margin-top:1px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:5px; margin:9px 0 8px; }
+  .chip{
+    background:#DCE8F1; border-radius:4px; padding:2px 8px;
+    font-size:11px; color:var(--navy);
+    font-family:'Barlow Semi Condensed', sans-serif; font-weight:600;
+    letter-spacing:.03em;
+  }
+  .chip b{ font-weight:700; }
+  .win p{ font-size:12.5px; line-height:1.5; color:var(--ink); }
+  @media (max-width:680px){ .windows{ grid-template-columns:1fr; } }
+
   /* ---------- notes ---------- */
   .notes{
     margin-top:16px; background:rgba(255,255,255,.07); border-radius:8px;
@@ -269,13 +293,82 @@
   </table>
   </div>
 
+  <div class="win-head">How Each Outlook Window Is Scored</div>
+  <div class="windows">
+
+    <div class="win">
+      <h3>0&ndash;6 Hour (Nowcast)</h3>
+      <div class="horizon">Rolling 6-hour window from now</div>
+      <div class="chips">
+        <span class="chip">NWS Watch/Warn + AFD <b>3.0</b></span>
+        <span class="chip">NDFD QPF 6-hr <b>3.0</b></span>
+        <span class="chip">MRMS Radar QPE <b>2.0</b></span>
+        <span class="chip">PWAT <b>1.5</b></span>
+      </div>
+      <p>Built from the products that matter when flooding could begin within
+      hours. Official alerts and the short-fuse NDFD rainfall forecast carry
+      the most weight, radar-observed rainfall shows where heavy rain is
+      already falling, and atmospheric moisture flags whether storms can rain
+      efficiently. Longer-range outlooks are deliberately excluded at this
+      time scale.</p>
+    </div>
+
+    <div class="win">
+      <h3>6&ndash;24 Hour (Day 1)</h3>
+      <div class="horizon">Rolling window covering the rest of today</div>
+      <div class="chips">
+        <span class="chip">NDFD QPF 12-hr <b>3.0</b></span>
+        <span class="chip">NWS Watch/Warn + AFD <b>3.0</b></span>
+        <span class="chip">PWAT <b>1.5</b></span>
+        <span class="chip">ERO <b>1.0</b></span>
+        <span class="chip">WPC QPF <b>1.0</b></span>
+        <span class="chip">SPC <b>0.5</b></span>
+      </div>
+      <p>Near-term rainfall guidance and official alerts lead, supported by
+      atmospheric moisture and the national excessive-rainfall and storm
+      outlooks. SPC carries the lowest weight because general thunderstorm
+      potential is less directly tied to flooding than rainfall amount,
+      moisture, or flood-specific alerts.</p>
+    </div>
+
+    <div class="win">
+      <h3>Day 2</h3>
+      <div class="horizon">Tomorrow, local calendar day</div>
+      <div class="chips">
+        <span class="chip">ERO <b>1.5</b></span>
+        <span class="chip">NDFD QPF Daily <b>1.5</b></span>
+        <span class="chip">SPC <b>1.0</b></span>
+        <span class="chip">WPC QPF <b>1.0</b></span>
+      </div>
+      <p>Blends the flash-flood-focused ERO with tomorrow's forecast rainfall
+      from both the local NDFD grids and national WPC guidance, plus
+      thunderstorm potential from SPC. Watches and warnings carry no weight at
+      this range; if one is ever issued whose valid period genuinely reaches
+      Day 2, it raises the level through the floor instead.</p>
+    </div>
+
+    <div class="win">
+      <h3>Day 3</h3>
+      <div class="horizon">Two days out, local calendar day</div>
+      <div class="chips">
+        <span class="chip">ERO <b>1.5</b></span>
+        <span class="chip">SPC <b>1.0</b></span>
+        <span class="chip">WPC QPF <b>1.0</b></span>
+        <span class="chip">NDFD QPF Daily <b>1.0</b></span>
+      </div>
+      <p>Same product mix as Day 2, with the NDFD daily rainfall weight
+      stepped down slightly because forecast skill decreases with lead time.
+      Watches and warnings act through the floor only, in the rare case one
+      is valid that far ahead.</p>
+    </div>
+
+  </div>
+
   <div class="notes">
-    <h2>How the scores combine</h2>
-    <p><b>Weighted blend.</b> Each outlook window (0&ndash;6 hr, 6&ndash;24 hr, Day 2, Day 3)
-    blends its relevant product scores using fixed weights, so no single soft signal
-    can flip a quiet day on its own. Short-range windows lean on radar, short-fuse QPF,
-    and atmospheric moisture; Day 2 and Day 3 lean on the ERO, SPC, and the WPC and
-    NDFD daily rainfall forecasts.</p>
+    <h2>Rules That Apply to Every Window</h2>
+    <p><b>Weighted blend.</b> Each window's product scores are multiplied by the
+    weights shown above and averaged, so no single soft signal can flip a quiet
+    day on its own. The result maps back to the five threat categories.</p>
     <p><b>Watches and warnings set a floor.</b> An active Flood Watch forces the affected
     window to at least HIGH, and an active Flood or Flash Flood Warning forces at least
     CRITICAL, regardless of how quiet the other products are. Watches apply only to the
