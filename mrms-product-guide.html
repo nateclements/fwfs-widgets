@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRMS Radar Products — Quick Reference</title>
+<style>
+  :root {
+    --ink: #14202b;
+    --slate: #3d5363;
+    --mute: #6c8090;
+    --paper: #f6f8f9;
+    --card: #ffffff;
+    --line: #d9e1e6;
+    --sky: #1f7ab5;
+    --sky-soft: #e6f0f7;
+    --rain: #2a8f7b;
+    --rain-soft: #e3f3ef;
+    --alert: #c2491d;
+    --alert-soft: #fbeae3;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 22px 48px;
+  }
+
+  header.page {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  h1 {
+    font-size: 23px;
+    margin: 0;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .lede {
+    color: var(--slate);
+    font-size: 15px;
+    margin: 12px 0 0;
+    max-width: 60ch;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    border-left: 5px solid var(--line);
+  }
+
+  .card.base { border-left-color: var(--sky); }
+  .card.qpe { border-left-color: var(--rain); }
+  .card.ratio { border-left-color: var(--alert); }
+
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .card h2 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .tag {
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .tag.base { background: var(--sky-soft); color: var(--sky); }
+  .tag.qpe { background: var(--rain-soft); color: var(--rain); }
+  .tag.ratio { background: var(--alert-soft); color: var(--alert); }
+
+  .card p { margin: 0 0 8px; font-size: 14.5px; color: var(--slate); }
+  .card p:last-child { margin-bottom: 0; }
+
+  .plain {
+    background: var(--paper);
+    border-radius: 6px;
+    padding: 10px 13px;
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .plain strong { color: var(--ink); }
+
+  .units {
+    font-size: 12.5px;
+    color: var(--mute);
+    margin-top: 8px;
+  }
+
+  .disclaimer {
+    margin-top: 26px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--alert);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+
+  .disclaimer h2 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 10px;
+    color: var(--alert);
+  }
+
+  .disclaimer p {
+    font-size: 13px;
+    color: var(--slate);
+    margin: 0 0 9px;
+  }
+  .disclaimer p:last-child { margin-bottom: 0; }
+
+  footer.page {
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--mute);
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 20px; }
+    .wrap { padding: 20px 16px 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <p class="eyebrow">Nowcast Reference</p>
+    <h1>Understanding the MRMS Radar Products</h1>
+    <p class="lede">A quick guide to the four radar layers on the nowcast page. MRMS (Multi-Radar Multi-Sensor) is a national NWS system that blends data from every nearby radar into a single high-resolution picture, updated every couple of minutes.</p>
+  </header>
+
+  <div class="card base">
+    <div class="card-head">
+      <h2>Base Reflectivity</h2>
+      <span class="tag base">What's happening now</span>
+    </div>
+    <p>This is the "regular" radar view — the same kind of colored radar image you see on TV and weather apps. It shows where rain (or hail/snow) is falling and how intense the echoes are at that moment.</p>
+    <div class="plain"><strong>Read it as:</strong> "Where is it raining right now, and how hard?" Brighter colors mean stronger returns. It is a snapshot of intensity, not a measure of how much water has actually accumulated.</div>
+  </div>
+
+  <div class="card qpe">
+    <div class="card-head">
+      <h2>Radar-Only QPE — 15 Minute</h2>
+      <span class="tag qpe">Short-burst rainfall</span>
+    </div>
+    <p>QPE stands for Quantitative Precipitation Estimate — radar's best estimate of how much rain has actually fallen. This layer totals the rainfall over the most recent 15 minutes.</p>
+    <div class="plain"><strong>Read it as:</strong> "How much rain just came down in the last 15 minutes?" This is the layer to watch for sudden, intense cloudbursts that drive flash flooding in canyons and on burn scars.</div>
+    <p class="units">Values shown in inches of accumulated rainfall.</p>
+  </div>
+
+  <div class="card qpe">
+    <div class="card-head">
+      <h2>Radar-Only QPE — 1 Hour</h2>
+      <span class="tag qpe">Recent rainfall total</span>
+    </div>
+    <p>The same radar rainfall estimate as above, but accumulated over the past full hour. It smooths out short bursts and shows the bigger picture of where meaningful rain has piled up.</p>
+    <div class="plain"><strong>Read it as:</strong> "How much rain has fallen over the last hour?" Useful for judging whether a storm has been sitting over one area long enough to be a concern.</div>
+    <p class="units">Values shown in inches of accumulated rainfall.</p>
+  </div>
+
+  <div class="card ratio">
+    <div class="card-head">
+      <h2>QPE-to-FFG Ratio — 1 Hour</h2>
+      <span class="tag ratio">Flash flood risk signal</span>
+    </div>
+    <p>This compares the past hour of rainfall (QPE) against Flash Flood Guidance (FFG) — the amount of rain the NWS estimates an area can absorb before flooding begins. It is expressed as a percentage.</p>
+    <div class="plain"><strong>Read it as:</strong> "Has it rained enough to cause flooding?" At <strong>100% or more</strong>, rainfall has met or exceeded what the ground can handle, and flash flooding becomes likely. This is the most direct flood-risk layer of the four.</div>
+    <p class="units">Values shown as a percentage of flash flood guidance.</p>
+  </div>
+
+  <div class="disclaimer">
+    <h2>Important — Please Read</h2>
+    <p>These radar products are decision-support tools, not official forecasts or warnings. Radar estimates rainfall remotely and can over- or under-estimate actual amounts, especially in mountainous terrain, during heavy hail, or far from the nearest radar.</p>
+    <p>QPE and FFG layers are estimates and should always be used alongside official National Weather Service watches, warnings, and statements, as well as ground reports and observed conditions. Nothing on this page replaces an official NWS product.</p>
+    <p>This page is provided for situational awareness only. Make all life-safety and operational decisions in coordination with the National Weather Service and your local emergency management protocols.</p>
+  </div>
+
+  <footer class="page">
+    Data source: NOAA/NWS Multi-Radar Multi-Sensor (MRMS) system.
+  </footer>
+
+</div>
+</body>
+</html>
