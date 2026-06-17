@@ -75,6 +75,19 @@
     font-size: 14.5px;
     color: var(--cream);
   }
+  .step p + p { margin-top: 8px; }
+
+  .ref-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--blue-accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(143, 201, 242, 0.5);
+    padding-bottom: 1px;
+  }
+  .ref-link:hover { color: var(--blue-soft); border-bottom-color: var(--blue-soft); }
 
   .caveat {
     border-top: 1px solid rgba(143, 201, 242, 0.35);
@@ -131,6 +144,11 @@
       rainfall from 50% up to 150% of the representative storm. Each storm location and
       rainfall level combination was run through a detailed hydraulic model (HEC-RAS)
       ahead of time to map where floodwater would go and how deep it would get.</p>
+      <p>The percentages scale how much total rain falls, not how the storm unfolds over
+      time. A 150% scenario is the same storm dropping one and a half times as much rain;
+      a 50% scenario is the same storm at half. The timing pattern stays the same across
+      every level.</p>
+      <a class="ref-link" href="representative_storm.html">See the storm depths behind each scenario &rarr;</a>
     </div>
   </div>
 
