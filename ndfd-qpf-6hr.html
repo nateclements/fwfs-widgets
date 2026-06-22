@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDFD QPF (6 Hour) — What Is This?</title>
+<style>
+  :root {
+    --navy: #0B2545;
+    --blue: #1C7FC4;
+    --sky:  #29ABE2;
+    --ink:  #1a2233;
+    --muted:#5b6678;
+    --line: #e3e8ef;
+    --card-bg: #ffffff;
+    --page-bg: #f4f6f9;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 24px 18px 32px;
+    background: var(--page-bg);
+    color: var(--ink);
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 640px; margin: 0 auto; }
+
+  header {
+    border-left: 5px solid var(--blue);
+    padding: 4px 0 4px 16px;
+    margin-bottom: 22px;
+  }
+
+  header .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  header h1 {
+    font-size: 24px;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  header p.sub {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(11,37,69,0.04);
+  }
+
+  .card h2 {
+    font-size: 15px;
+    margin: 0 0 8px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card h2 .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+  }
+
+  .dot-blue { background: var(--blue); }
+  .dot-sky  { background: var(--sky); }
+  .dot-navy { background: var(--navy); }
+
+  .card p { margin: 0; font-size: 14.5px; }
+
+  .readit {
+    background: #eef6fc;
+    border-left: 4px solid var(--sky);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+  .readit strong { color: var(--navy); }
+
+  .do-list, .not-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 14.5px;
+  }
+  .do-list li, .not-list li {
+    padding: 6px 0 6px 26px;
+    position: relative;
+  }
+  .do-list li::before {
+    content: "✓";
+    position: absolute; left: 0; top: 6px;
+    color: #1f9d55; font-weight: 700;
+  }
+  .not-list li::before {
+    content: "✕";
+    position: absolute; left: 0; top: 6px;
+    color: #c2453d; font-weight: 700;
+  }
+
+  .disclaimer {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    line-height: 1.5;
+  }
+  .disclaimer strong { color: var(--ink); }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <p class="eyebrow">Forecast Product Guide</p>
+      <h1>NDFD QPF (6&nbsp;Hour)</h1>
+      <p class="sub">National Digital Forecast Database — Quantitative Precipitation Forecast</p>
+    </header>
+
+    <div class="card">
+      <h2><span class="dot dot-blue"></span>What you're looking at</h2>
+      <p>This map shows the National Weather Service's official gridded precipitation forecast for an upcoming 6-hour window. Unlike a single forecast office's product, the NDFD is stitched seamlessly across office boundaries, so the values flow continuously across the whole area.</p>
+      <div class="readit">
+        <strong>Read it as:</strong> &ldquo;Here's how much rain the NWS officially expects to fall over the next 6 hours.&rdquo;
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot dot-sky"></span>What it does</h2>
+      <ul class="do-list">
+        <li>Shows the authoritative NWS forecast of <strong>where</strong> and <strong>how much</strong> precipitation is expected in the short term.</li>
+        <li>Helps you stage crews, pre-position resources, and anticipate which basins may be at risk <strong>before</strong> rain begins.</li>
+        <li>Gives a consistent, seamless picture across the full operational area.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot dot-navy"></span>What it does NOT do</h2>
+      <ul class="not-list">
+        <li>It is <strong>not</strong> live radar and <strong>not</strong> a measurement of rain that has already fallen — for that, use the MRMS QPE products.</li>
+        <li>It's a forecast, so actual totals and timing can shift as the event evolves.</li>
+        <li>It does not assess flash-flood severity on its own — pair it with Flash Flood Guidance and observed QPE for the full picture.</li>
+      </ul>
+    </div>
+
+    <p class="disclaimer">
+      <strong>Operational note:</strong> This display is provided for situational awareness only and supplements — but does not replace — official National Weather Service forecasts, watches, and warnings. Forecast precipitation is inherently uncertain; decisions affecting life and property should always be confirmed against the latest official NWS guidance and local observations.
+    </p>
+
+  </div>
+</body>
+</html>
