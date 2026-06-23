@@ -1,0 +1,72 @@
+<div id="nl-wx" style="display:flex;align-items:center;gap:8px;
+     font-family:'Avenir Next',Segoe UI,sans-serif;color:#fff;cursor:pointer;
+     user-select:none;" title="Click for current conditions">
+  <span id="nl-wx-icon" style="font-size:22px;">🌡️</span>
+  <span id="nl-wx-temp" style="font-size:26px;font-weight:600;">--°</span>
+  <span id="nl-wx-desc" style="font-size:13px;opacity:.85;"></span>
+</div>
+
+<div id="nl-wx-panel" style="display:none;position:absolute;top:60px;right:20px;
+     background:#0B2545;border:1px solid #1C7FC4;border-radius:10px;padding:16px 20px;
+     color:#fff;font-family:'Avenir Next',Segoe UI,sans-serif;min-width:240px;
+     box-shadow:0 6px 20px rgba(0,0,0,.4);z-index:9999;">
+  <div style="font-size:15px;font-weight:600;color:#29ABE2;margin-bottom:8px;">
+    Current Conditions — Moab (KCNY)</div>
+  <div id="nl-wx-detail" style="font-size:13px;line-height:1.8;"></div>
+  <div id="nl-wx-time" style="font-size:11px;opacity:.6;margin-top:8px;"></div>
+</div>
+
+<script>
+(function(){
+  const STATION = "KCNY";
+  const cToF = c => c==null ? null : Math.round(c*9/5+32);
+  const msToMph = m => m==null ? null : Math.round(m*2.237);
+
+  function emoji(d){
+    d=(d||"").toLowerCase();
+    if(d.includes("thunder")) return "⛈️";
+    if(d.includes("rain")||d.includes("shower")) return "🌧️";
+    if(d.includes("snow")) return "🌨️";
+    if(d.includes("cloud")||d.includes("overcast")) return "☁️";
+    if(d.includes("fog")||d.includes("haze")) return "🌫️";
+    if(d.includes("clear")||d.includes("fair")||d.includes("sunny")) return "☀️";
+    return "🌡️";
+  }
+
+  async function load(){
+    try{
+      const r = await fetch(`https://api.weather.gov/stations/${STATION}/observations/latest`,
+        {headers:{"Accept":"application/geo+json"}});
+      const p = (await r.json()).properties;
+      const t = cToF(p.temperature.value);
+      const desc = p.textDescription || "";
+      document.getElementById("nl-wx-temp").textContent = t==null ? "--°" : t+"°F";
+      document.getElementById("nl-wx-desc").textContent = desc;
+      document.getElementById("nl-wx-icon").textContent = emoji(desc);
+
+      const rh = p.relativeHumidity.value;
+      const wind = msToMph(p.windSpeed.value);
+      const dew = cToF(p.dewpoint.value);
+      const gust = msToMph(p.windGust.value);
+      document.getElementById("nl-wx-detail").innerHTML =
+        `Conditions: ${desc||"—"}<br>`+
+        `Temperature: ${t!=null?t+"°F":"—"}<br>`+
+        `Dewpoint: ${dew!=null?dew+"°F":"—"}<br>`+
+        `Humidity: ${rh!=null?Math.round(rh)+"%":"—"}<br>`+
+        `Wind: ${wind!=null?wind+" mph":"calm"}${gust!=null?" (gusts "+gust+")":""}`;
+      document.getElementById("nl-wx-time").textContent =
+        "Observed: "+new Date(p.timestamp).toLocaleString("en-US",{timeZone:"America/Denver"})+" MT";
+    }catch(e){
+      document.getElementById("nl-wx-temp").textContent="N/A";
+    }
+  }
+
+  const panel = document.getElementById("nl-wx-panel");
+  document.getElementById("nl-wx").addEventListener("click",()=>{
+    panel.style.display = panel.style.display==="none" ? "block" : "none";
+  });
+
+  load();
+  setInterval(load, 10*60*1000); // refresh every 10 min
+})();
+</script>
