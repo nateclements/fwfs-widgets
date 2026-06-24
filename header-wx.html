@@ -102,19 +102,36 @@
     return `<svg ${w} stroke="${SUN}"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>`;
   }
 
+  // Pull the most recent value of a field across a list of observations,
+  // so a single null in the latest ob doesn't blank the display.
+  function recent(features, key){
+    for(const f of features){
+      const v = f.properties?.[key]?.value;
+      if(v != null) return v;
+    }
+    return null;
+  }
+
   async function load(){
     try{
-      const r = await fetch(`https://api.weather.gov/stations/${STATION}/observations/latest`,
+      // Fetch a small batch so we can fall back to the last good reading.
+      const r = await fetch(`https://api.weather.gov/stations/${STATION}/observations?limit=8`,
         { headers: { "Accept": "application/geo+json" } });
       if(!r.ok) throw new Error("HTTP "+r.status);
-      const p = (await r.json()).properties;
+      const features = (await r.json()).features || [];
+      if(!features.length) throw new Error("no observations");
 
-      const t    = cToF(p.temperature.value);
-      const dew  = cToF(p.dewpoint.value);
-      const rh   = p.relativeHumidity.value;
-      const wind = msToMph(p.windSpeed.value);
-      const gust = msToMph(p.windGust.value);
-      const desc = p.textDescription || "";
+      // Anchor the timestamp/description to the most recent ob that has a temperature;
+      // fall back to the latest ob if none in the batch report one.
+      const anchor = features.find(f => f.properties?.temperature?.value != null) || features[0];
+      const ap = anchor.properties;
+
+      const t    = cToF(recent(features, "temperature"));
+      const dew  = cToF(recent(features, "dewpoint"));
+      const rh   = recent(features, "relativeHumidity");
+      const wind = msToMph(recent(features, "windSpeed"));
+      const gust = msToMph(recent(features, "windGust"));
+      const desc = ap.textDescription || features[0].properties.textDescription || "";
 
       document.getElementById("nl-wx-temp").textContent = t==null ? "--\u00B0" : t+"\u00B0F";
       document.getElementById("nl-wx-desc").textContent = desc;
@@ -128,7 +145,7 @@
         `Wind: ${wind!=null ? wind+" mph" : "calm"}${gust!=null ? " (gusts "+gust+")" : ""}`;
 
       document.getElementById("nl-wx-time").textContent =
-        "Observed: " + new Date(p.timestamp).toLocaleString("en-US",
+        "Observed: " + new Date(ap.timestamp).toLocaleString("en-US",
           { timeZone: "America/Denver", month:"short", day:"numeric",
             hour:"numeric", minute:"2-digit" }) + " MT";
     }catch(e){
